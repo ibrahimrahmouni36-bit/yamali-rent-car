@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07070b"/>
+      <stop offset="1" stop-color="#12121a"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="65%" cy="35%" r="60%">
+      <stop offset="0" stop-color="#d6b25e" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#d6b25e" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f0dc97"/>
+      <stop offset="0.5" stop-color="#d6b25e"/>
+      <stop offset="1" stop-color="#f0dc97"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="700" fill="url(#bg)"/>
+  <rect width="1200" height="700" fill="url(#glow)"/>
+
+  <g opacity="0.22">
+    <path d="M-50 520 C250 430 420 420 820 470 C1040 500 1140 560 1280 650" stroke="url(#gold)" stroke-width="6" fill="none"/>
+    <path d="M-50 560 C260 480 450 470 830 520 C1045 548 1170 600 1280 690" stroke="url(#gold)" stroke-width="2" fill="none"/>
+  </g>
+
+  <g transform="translate(240,210) scale(1.1)">
+    <path d="M80 170 C120 135 180 120 260 120 L370 120 C450 120 520 140 560 170 L600 170 L620 190 L620 230 L590 230 C585 255 565 275 540 275 C515 275 495 255 490 230 L210 230 C205 255 185 275 160 275 C135 275 115 255 110 230 L80 230 Z" fill="none" stroke="url(#gold)" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M160 275 A35 35 0 1 0 160 276 Z" fill="none" stroke="url(#gold)" stroke-width="10"/>
+    <path d="M540 275 A35 35 0 1 0 540 276 Z" fill="none" stroke="url(#gold)" stroke-width="10"/>
+  </g>
+
+  <g font-family="Inter, Arial, sans-serif">
+    <text x="80" y="110" font-size="54" font-weight="800" fill="#f3f3f4">Opel Corsa 2026 — Gris</text>
+    <text x="80" y="160" font-size="26" font-weight="600" fill="#a7a7b3">Moderne • 5 places • Clim</text>
+    <rect x="80" y="190" width="220" height="8" rx="4" fill="url(#gold)" opacity="0.9"/>
+  </g>
+</svg>

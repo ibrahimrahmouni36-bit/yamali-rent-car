@@ -471,10 +471,10 @@ function updateCarouselPositions(){
   const { cards, dots, viewport } = carouselElements;
   const viewportWidth = viewport.clientWidth || 1200;
   const isMobile = viewportWidth < 760;
-  const x1 = Math.min(viewportWidth * (isMobile ? 0.31 : 0.28), isMobile ? 150 : 360);
-  const x2 = Math.min(viewportWidth * (isMobile ? 0.51 : 0.47), isMobile ? 250 : 610);
-  const rotate1 = isMobile ? 48 : 56;
-  const rotate2 = isMobile ? 68 : 74;
+  const x1 = Math.min(viewportWidth * (isMobile ? 0.27 : 0.24), isMobile ? 138 : 320);
+  const x2 = Math.min(viewportWidth * (isMobile ? 0.43 : 0.39), isMobile ? 225 : 520);
+  const rotate1 = isMobile ? 42 : 48;
+  const rotate2 = isMobile ? 60 : 64;
 
   cards.forEach((card, index) => {
     const delta = getWrappedDelta(index, activeCarIndex, cars.length);
@@ -492,13 +492,13 @@ function updateCarouselPositions(){
       filter = 'none';
       card.dataset.state = 'active';
     } else if (abs === 1) {
-      transform = `translate(-50%, -50%) translateX(${sign * x1}px) rotateY(${sign * -rotate1}deg) scale(${isMobile ? 0.74 : 0.8})`;
+      transform = `translate(-50%, -50%) translateX(${sign * x1}px) rotateY(${sign * -rotate1}deg) scale(${isMobile ? 0.78 : 0.84})`;
       opacity = '.74';
       zIndex = '20';
       filter = 'blur(.2px) saturate(.82) brightness(.75)';
       card.dataset.state = delta < 0 ? 'left' : 'right';
     } else if (abs === 2) {
-      transform = `translate(-50%, -50%) translateX(${sign * x2}px) rotateY(${sign * -rotate2}deg) scale(${isMobile ? 0.5 : 0.62})`;
+      transform = `translate(-50%, -50%) translateX(${sign * x2}px) rotateY(${sign * -rotate2}deg) scale(${isMobile ? 0.58 : 0.68})`;
       opacity = '.28';
       zIndex = '10';
       filter = 'blur(1px) saturate(.55) brightness(.55)';
@@ -553,7 +553,9 @@ function renderCarsGrid(){
     card.style.setProperty('--fleet-card-image', `url("${car.photo}")`);
     card.innerHTML = `
       <div class="fleetCard__media">
-        <img class="fleetCard__img" src="${car.photo}" onerror="this.onerror=null;this.src='${car.fallback}';" alt="${getCarName(car)}">
+        <div class="fleetCard__art">
+          <img class="fleetCard__img" src="${car.photo}" onerror="this.onerror=null;this.src='${car.fallback}';" alt="${getCarName(car)}">
+        </div>
       </div>
       <div class="fleetCard__shade"></div>
       <div class="fleetCard__content">

@@ -550,6 +550,7 @@ function renderCarsGrid(){
     const card = document.createElement('article');
     card.className = 'fleetCard';
     card.dataset.index = String(index);
+    card.style.setProperty('--fleet-card-image', `url("${car.photo}")`);
     card.innerHTML = `
       <div class="fleetCard__media">
         <img class="fleetCard__img" src="${car.photo}" onerror="this.onerror=null;this.src='${car.fallback}';" alt="${getCarName(car)}">

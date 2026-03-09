@@ -408,7 +408,7 @@ section, .section {
 }
 .fleetCarousel__viewport{
   position:relative;
-  height:780px;
+  height:820px;
   overflow:hidden;
   perspective:2200px;
   perspective-origin:center center;
@@ -423,8 +423,8 @@ section, .section {
   position:absolute;
   left:50%;
   top:50%;
-  width:min(34vw, 560px);
-  aspect-ratio:0.72;
+  width:min(38vw, 620px);
+  aspect-ratio:0.9;
   transform:translate(-50%, -50%);
   transform-style:preserve-3d;
   border-radius:34px;
@@ -441,15 +441,38 @@ section, .section {
   position:absolute;
   inset:0;
   border-radius:inherit;
-  background:linear-gradient(180deg, rgba(240,220,151,.16), transparent 30%);
+  background:linear-gradient(180deg, rgba(240,220,151,.14), transparent 26%);
   opacity:.85;
   pointer-events:none;
   z-index:1;
 }
 .fleetCard__media,
 .fleetCard__img{width:100%;height:100%}
-.fleetCard__media{position:absolute;inset:0}
-.fleetCard__img{display:block;object-fit:cover}
+.fleetCard__media{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  background:linear-gradient(180deg, rgba(10,10,16,.96), rgba(4,4,8,.98));
+}
+.fleetCard__media::before{
+  content:"";
+  position:absolute;
+  inset:-8%;
+  background-image:var(--fleet-card-image);
+  background-size:cover;
+  background-position:center;
+  filter:blur(22px) brightness(.38);
+  transform:scale(1.08);
+  z-index:0;
+}
+.fleetCard__img{
+  position:relative;
+  z-index:1;
+  display:block;
+  object-fit:contain;
+  object-position:center center;
+  padding:18px 16px 118px;
+}
 .fleetCard__shade{
   position:absolute;
   inset:0;
@@ -555,18 +578,20 @@ section, .section {
 
 @media (max-width: 1180px){
   .fleetCarousel{padding:10px 74px 68px}
-  .fleetCarousel__viewport{height:680px}
-  .fleetCard{width:min(42vw, 500px)}
+  .fleetCarousel__viewport{height:720px}
+  .fleetCard{width:min(46vw, 560px)}
   .fleetCard__model{font-size:1.7rem}
+  .fleetCard__img{padding:16px 14px 112px}
 }
 
 @media (max-width: 820px){
   .fleetCarousel{padding:0 0 64px}
-  .fleetCarousel__viewport{height:520px}
-  .fleetCard{width:min(72vw, 360px);border-radius:26px}
+  .fleetCarousel__viewport{height:560px}
+  .fleetCard{width:min(80vw, 420px);border-radius:26px}
   .fleetCard__content{padding:20px 18px 22px}
   .fleetCard__model{font-size:1.35rem}
   .fleetCard__meta{font-size:.94rem}
+  .fleetCard__img{padding:14px 12px 106px}
   .fleetCarousel__nav{top:auto;bottom:6px;transform:none;width:48px;height:48px;font-size:1.65rem}
   .fleetCarousel__nav--prev{left:calc(50% - 68px)}
   .fleetCarousel__nav--next{right:calc(50% - 68px)}
@@ -577,8 +602,9 @@ section, .section {
   .actions{align-items:stretch}
   .langWrap{flex:1 1 auto}
   .langSelect{width:100%;min-width:0}
-  .fleetCarousel__viewport{height:460px}
-  .fleetCard{width:min(82vw, 320px)}
+  .fleetCarousel__viewport{height:500px}
+  .fleetCard{width:min(88vw, 340px)}
   .fleetCard__brand{font-size:.72rem}
+  .fleetCard__img{padding:12px 10px 104px}
   .fleetCard__actions .btn{flex:1 1 0;min-width:0}
 }

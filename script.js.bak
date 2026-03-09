@@ -70,8 +70,8 @@ const i18n = {
     why_3_desc: "Une présence continue pour répondre rapidement en cas de besoin.",
     why_4: "WhatsApp rapide",
     why_4_desc: "Réservation simple et échange direct sans étapes compliquées.",
-    cars_title: "Notre Flotte Premium",
-    cars_sub: "Faites défiler la galerie, choisissez votre voiture puis réservez en quelques secondes.",
+    cars_title: "Notre galerie de voitures",
+    cars_sub: "Parcourez les modèles disponibles, choisissez votre voiture puis réservez en quelques secondes.",
     how_title: "Comment réserver",
     how_1_t: "Choisissez la voiture",
     how_1_s: "Modèle + couleur disponibles.",
@@ -138,8 +138,8 @@ const i18n = {
     why_3_desc: "متواجدون باستمرار للرد بسرعة وقت الحاجة.",
     why_4: "واتساب سريع",
     why_4_desc: "حجز بسيط وتواصل مباشر بلا خطوات معقدة.",
-    cars_title: "أسطولنا المميز",
-    cars_sub: "مرر داخل المعرض، اختر السيارة المناسبة ثم احجز بسرعة.",
+    cars_title: "معرض السيارات",
+    cars_sub: "تصفح السيارات المتوفرة، اختر الموديل المناسب ثم احجز بسرعة.",
     how_title: "كيفية الحجز",
     how_1_t: "اختر السيارة",
     how_1_s: "الموديل واللون المتوفران.",
@@ -206,8 +206,8 @@ const i18n = {
     why_3_desc: "Continuous support to answer quickly whenever needed.",
     why_4: "Fast WhatsApp",
     why_4_desc: "Simple booking and direct contact without complicated steps.",
-    cars_title: "Our Premium Fleet",
-    cars_sub: "Slide through the gallery, choose your car and book in seconds.",
+    cars_title: "Our car gallery",
+    cars_sub: "Browse the available models, choose your car and book in seconds.",
     how_title: "How to book",
     how_1_t: "Choose the car",
     how_1_s: "Available model and color.",
@@ -274,8 +274,8 @@ const i18n = {
     why_3_desc: "Voortdurende ondersteuning om snel te helpen wanneer nodig.",
     why_4: "Snelle WhatsApp",
     why_4_desc: "Eenvoudig reserveren en direct contact zonder ingewikkelde stappen.",
-    cars_title: "Onze Premium Vloot",
-    cars_sub: "Blader door de galerij, kies uw auto en reserveer in enkele seconden.",
+    cars_title: "Onze autogalerij",
+    cars_sub: "Bekijk de beschikbare modellen, kies uw auto en reserveer in enkele seconden.",
     how_title: "Hoe reserveren",
     how_1_t: "Kies de auto",
     how_1_s: "Beschikbaar model en kleur.",
@@ -342,8 +342,8 @@ const i18n = {
     why_3_desc: "Kontinuierliche Unterstützung, um bei Bedarf schnell zu reagieren.",
     why_4: "Schnelles WhatsApp",
     why_4_desc: "Einfache Buchung und direkter Kontakt ohne komplizierte Schritte.",
-    cars_title: "Unsere Premium-Flotte",
-    cars_sub: "Blättern Sie durch die Galerie, wählen Sie Ihr Auto und buchen Sie in wenigen Sekunden.",
+    cars_title: "Unsere Fahrzeuggalerie",
+    cars_sub: "Sehen Sie sich die verfügbaren Modelle an, wählen Sie Ihr Auto und buchen Sie in wenigen Sekunden.",
     how_title: "So buchen Sie",
     how_1_t: "Auto auswählen",
     how_1_s: "Verfügbares Modell und Farbe.",
@@ -373,9 +373,6 @@ const i18n = {
 };
 
 let lang = "fr";
-let activeCarIndex = 0;
-let carouselTimer = null;
-let carouselElements = null;
 
 const langSelect = document.getElementById("langSelect");
 const carSelect = document.getElementById("carSelect");
@@ -432,200 +429,39 @@ function updateCarPreview(){
   carMeta.textContent = getCarMetaText(car);
 }
 
-function getWrappedDelta(index, active, total){
-  let delta = index - active;
-  if (delta > total / 2) delta -= total;
-  if (delta < -total / 2) delta += total;
-  return delta;
-}
-
-function stopCarouselAutoplay(){
-  if (carouselTimer) {
-    clearInterval(carouselTimer);
-    carouselTimer = null;
-  }
-}
-
-function startCarouselAutoplay(){
-  stopCarouselAutoplay();
-  if (!carouselElements || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  carouselTimer = window.setInterval(() => {
-    goToCarouselIndex(activeCarIndex + 1, false);
-  }, 3800);
-}
-
-function restartCarouselAutoplay(){
-  startCarouselAutoplay();
-}
-
-function syncSelectedCar(index){
-  activeCarIndex = (index + cars.length) % cars.length;
-  carSelect.value = String(activeCarIndex);
-  updateCarPreview();
-  updateCarouselPositions();
-}
-
-function updateCarouselPositions(){
-  if (!carouselElements) return;
-
-  const { cards, dots, viewport } = carouselElements;
-  const viewportWidth = viewport.clientWidth || 1200;
-  const isMobile = viewportWidth < 760;
-  const x1 = Math.min(viewportWidth * (isMobile ? 0.31 : 0.28), isMobile ? 150 : 360);
-  const x2 = Math.min(viewportWidth * (isMobile ? 0.51 : 0.47), isMobile ? 250 : 610);
-  const rotate1 = isMobile ? 48 : 56;
-  const rotate2 = isMobile ? 68 : 74;
-
-  cards.forEach((card, index) => {
-    const delta = getWrappedDelta(index, activeCarIndex, cars.length);
-    const abs = Math.abs(delta);
-    const sign = delta < 0 ? -1 : 1;
-    let transform = 'translate(-50%, -50%) scale(.35)';
-    let opacity = '0';
-    let zIndex = '1';
-    let filter = 'blur(3px) saturate(.55) brightness(.45)';
-
-    if (abs === 0) {
-      transform = 'translate(-50%, -50%) translateX(0px) rotateY(0deg) scale(1)';
-      opacity = '1';
-      zIndex = '30';
-      filter = 'none';
-      card.dataset.state = 'active';
-    } else if (abs === 1) {
-      transform = `translate(-50%, -50%) translateX(${sign * x1}px) rotateY(${sign * -rotate1}deg) scale(${isMobile ? 0.74 : 0.8})`;
-      opacity = '.74';
-      zIndex = '20';
-      filter = 'blur(.2px) saturate(.82) brightness(.75)';
-      card.dataset.state = delta < 0 ? 'left' : 'right';
-    } else if (abs === 2) {
-      transform = `translate(-50%, -50%) translateX(${sign * x2}px) rotateY(${sign * -rotate2}deg) scale(${isMobile ? 0.5 : 0.62})`;
-      opacity = '.28';
-      zIndex = '10';
-      filter = 'blur(1px) saturate(.55) brightness(.55)';
-      card.dataset.state = delta < 0 ? 'far-left' : 'far-right';
-    } else {
-      card.dataset.state = 'hidden';
-    }
-
-    card.style.transform = transform;
-    card.style.opacity = opacity;
-    card.style.zIndex = zIndex;
-    card.style.filter = filter;
-    card.setAttribute('aria-hidden', abs > 2 ? 'true' : 'false');
-  });
-
-  dots.forEach((dot, index) => {
-    dot.classList.toggle('is-active', index === activeCarIndex);
-    dot.setAttribute('aria-current', index === activeCarIndex ? 'true' : 'false');
-  });
-}
-
-function goToCarouselIndex(index, userInitiated = true){
-  syncSelectedCar(index);
-  if (userInitiated) restartCarouselAutoplay();
-}
-
 function renderCarsGrid(){
-  stopCarouselAutoplay();
   const dict = i18n[lang];
   const grid = document.getElementById("carsGrid");
   if (!grid) return;
 
-  grid.innerHTML = `
-    <div class="fleetCarousel" aria-label="${dict.cars_title}">
-      <button class="fleetCarousel__nav fleetCarousel__nav--prev" type="button" aria-label="Previous car">‹</button>
-      <div class="fleetCarousel__viewport">
-        <div class="fleetCarousel__track"></div>
-      </div>
-      <button class="fleetCarousel__nav fleetCarousel__nav--next" type="button" aria-label="Next car">›</button>
-      <div class="fleetCarousel__dots" aria-label="Carousel pagination"></div>
-    </div>
-  `;
-
-  const viewport = grid.querySelector('.fleetCarousel__viewport');
-  const track = grid.querySelector('.fleetCarousel__track');
-  const dotsWrap = grid.querySelector('.fleetCarousel__dots');
-
+  grid.innerHTML = "";
   cars.forEach((car, index) => {
-    const card = document.createElement('article');
-    card.className = 'fleetCard';
-    card.dataset.index = String(index);
+    const card = document.createElement("article");
+    card.className = "galleryCard";
     card.innerHTML = `
-      <div class="fleetCard__media">
-        <img class="fleetCard__img" src="${car.photo}" onerror="this.onerror=null;this.src='${car.fallback}';" alt="${getCarName(car)}">
+      <div class="galleryCard__imgWrap">
+        <img class="galleryCard__img" src="${car.photo}" onerror="this.onerror=null;this.src='${car.fallback}';" alt="${getCarName(car)}">
       </div>
-      <div class="fleetCard__shade"></div>
-      <div class="fleetCard__content">
-        <div class="fleetCard__brand">YAMALI RENT CAR</div>
-        <div class="fleetCard__model">${getCarName(car)}</div>
-        <div class="fleetCard__meta">${getCarMetaText(car)}</div>
-        <div class="fleetCard__actions">
+      <div class="galleryCard__overlay">
+        <div class="galleryCard__topline">YAMALI RENT CAR</div>
+        <div class="galleryCard__name">${getCarName(car)}</div>
+        <div class="galleryCard__meta">${getCarMetaText(car)}</div>
+        <div class="galleryCard__actions">
           <a class="btn btn--primary" target="_blank" rel="noopener" href="https://wa.me/${phone}?text=${encodeURIComponent(dict.wa_short(getCarName(car)))}">${dict.car_btn}</a>
           <a class="btn btn--ghost" href="#reserve" data-car-index="${index}">${dict.car_secondary_btn}</a>
         </div>
       </div>
     `;
-
-    card.addEventListener('click', (event) => {
-      if (event.target.closest('a')) return;
-      goToCarouselIndex(index);
-    });
-
-    track.appendChild(card);
-
-    const dot = document.createElement('button');
-    dot.type = 'button';
-    dot.className = 'fleetCarousel__dot';
-    dot.setAttribute('aria-label', `${dict.car_btn} ${getCarName(car)}`);
-    dot.addEventListener('click', () => goToCarouselIndex(index));
-    dotsWrap.appendChild(dot);
+    grid.appendChild(card);
   });
-
-  carouselElements = {
-    root: grid.querySelector('.fleetCarousel'),
-    viewport,
-    track,
-    cards: Array.from(track.children),
-    dots: Array.from(dotsWrap.children)
-  };
-
-  grid.querySelector('.fleetCarousel__nav--prev').addEventListener('click', () => goToCarouselIndex(activeCarIndex - 1));
-  grid.querySelector('.fleetCarousel__nav--next').addEventListener('click', () => goToCarouselIndex(activeCarIndex + 1));
 
   grid.querySelectorAll('[data-car-index]').forEach((link) => {
     link.addEventListener('click', (event) => {
-      const idx = Number(event.currentTarget.getAttribute('data-car-index') || '0');
-      carSelect.value = String(idx);
-      goToCarouselIndex(idx);
+      const idx = event.currentTarget.getAttribute('data-car-index');
+      carSelect.value = idx;
+      updateCarPreview();
     });
   });
-
-  let pointerStartX = null;
-  viewport.addEventListener('pointerdown', (event) => {
-    pointerStartX = event.clientX;
-  });
-  viewport.addEventListener('pointerup', (event) => {
-    if (pointerStartX === null) return;
-    const deltaX = event.clientX - pointerStartX;
-    if (Math.abs(deltaX) > 40) {
-      goToCarouselIndex(activeCarIndex + (deltaX < 0 ? 1 : -1));
-    }
-    pointerStartX = null;
-  });
-  viewport.addEventListener('pointerleave', () => {
-    pointerStartX = null;
-  });
-
-  carouselElements.root.addEventListener('mouseenter', stopCarouselAutoplay);
-  carouselElements.root.addEventListener('mouseleave', startCarouselAutoplay);
-  carouselElements.root.addEventListener('focusin', stopCarouselAutoplay);
-  carouselElements.root.addEventListener('focusout', (event) => {
-    if (!carouselElements.root.contains(event.relatedTarget)) startCarouselAutoplay();
-  });
-
-  activeCarIndex = Math.min(activeCarIndex, cars.length - 1);
-  updateCarouselPositions();
-  startCarouselAutoplay();
 }
 
 function applyLang(){
@@ -657,13 +493,7 @@ if (langSelect) {
   });
 }
 
-carSelect.addEventListener("change", () => {
-  const nextIndex = parseInt(carSelect.value || "0", 10);
-  activeCarIndex = Number.isNaN(nextIndex) ? 0 : nextIndex;
-  updateCarPreview();
-  updateCarouselPositions();
-  restartCarouselAutoplay();
-});
+carSelect.addEventListener("change", updateCarPreview);
 
 document.getElementById("year").textContent = new Date().getFullYear();
 
@@ -694,8 +524,6 @@ document.getElementById("quickForm").addEventListener("submit", (e) => {
   const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
   window.open(url, "_blank", "noopener");
 });
-
-window.addEventListener("resize", updateCarouselPositions);
 
 langSelect.value = lang;
 applyLang();
